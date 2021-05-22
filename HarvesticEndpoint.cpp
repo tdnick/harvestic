@@ -29,6 +29,8 @@ void HarvesticEndpoint::setupRoutes() {
     using namespace Rest;
     Routes::Get(router,"/map/:index/",Routes::bind(&HarvesticEndpoint::getHoseState,this));
     Routes::Put(router,"/map/:index/:boolValue",Routes::bind(&HarvesticEndpoint::setHoseState,this));
+    Routes::Get(router,"/waterTemp/",Routes::bind(&HarvesticEndpoint::getWaterTemp,this));
+    Routes::Put(router,"/waterTemp/:celsius",Routes::bind(&HarvesticEndpoint::setWaterTemp,this));
 }
 
 void HarvesticEndpoint::getHoseState(const Rest::Request& request, Http::ResponseWriter response){
@@ -63,5 +65,37 @@ void HarvesticEndpoint::setHoseState(const Rest::Request& request, Http::Respons
     else{ 
         hvs.setHoseState(index,boolValue);
         response.send(Http::Code::Ok, "Hose " + to_string(index) + " has been " + ((boolValue)?"turned on":"turned off"));
+    }
+}
+
+void HarvesticEndpoint::getWaterTemp(const Rest::Request& request, Http::ResponseWriter response){
+    (void)request;
+
+    Guard guard(HarvesticLock);
+    
+    int celsius = hvs.getWaterTemp();
+    
+    using namespace Http;
+    response.headers()
+                    .add<Header::Server>("pistache/0.1")
+                    .add<Header::ContentType>(MIME(Text, Plain));
+    response.send(Http::Code::Ok, "Temperature is set to " + to_string(celsius));
+
+}
+
+void HarvesticEndpoint::setWaterTemp(const Rest::Request& request, Http::ResponseWriter response){
+    auto celsius = request.param(":celsius").as<int>();
+
+    Guard guard(HarvesticLock);
+
+    if(celsius < 15){
+        response.send(Http::Code::Not_Found, "Temperature is too low.");
+    }
+    else if(celsius > 30) { 
+        response.send(Http::Code::Not_Found, "Temperature is too high.");
+    }
+    else {
+        hvs.setWaterTemp(celsius);
+        response.send(Http::Code::Ok, "Temperature was set to " + to_string(celsius));
     }
 }
