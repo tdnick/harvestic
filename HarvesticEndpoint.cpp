@@ -1,5 +1,5 @@
 #include "HarvesticEndpoint.hpp"
-
+#include "ParserJson.hpp"
 using namespace std;
 using namespace Pistache;
 
@@ -27,8 +27,24 @@ void HarvesticEndpoint::stop(){
 
 void HarvesticEndpoint::setupRoutes() {
     using namespace Rest;
-    Routes::Get(router,"/map/:index/",Routes::bind(&HarvesticEndpoint::getHoseState,this));
-    Routes::Put(router,"/map/:index/:boolValue",Routes::bind(&HarvesticEndpoint::setHoseState,this));
+    Routes::Get(router, "/map/:index/", Routes::bind(&HarvesticEndpoint::getHoseState,this));
+    Routes::Put(router, "/map/:index/:boolValue", Routes::bind(&HarvesticEndpoint::setHoseState,this));
+    Routes::Put(router, "/meteo/conditions/", Routes::bind(&HarvesticEndpoint::setMeteoConditions,this));
+}
+
+void HarvesticEndpoint::setMeteoConditions(const Rest::Request& request, Http::ResponseWriter response){
+    ParserJson json;
+    Json::Value root = json.parse(request.body());
+
+    hvs.setAirTemperature(root["air_temperature"].asFloat());
+    hvs.setAirHumidity(root["air_humidity"].asFloat());
+    hvs.setTimeOfDay(root["time_of_day"].asString());
+    response.send(Http::Code::Ok, "Meteo conditions set.");
+}
+
+///TODO:
+void HarvesticEndpoint::getMeteoConditions(const Rest::Request& request, Http::ResponseWriter response){
+    
 }
 
 void HarvesticEndpoint::getHoseState(const Rest::Request& request, Http::ResponseWriter response){

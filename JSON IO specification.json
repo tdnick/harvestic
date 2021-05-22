@@ -25,6 +25,21 @@
                 "optional": false
             }
             ]
+        },
+        "3":{
+            "token-delimitators": "",
+            "protocol": "HTTP",
+            "prefix": "curl -XPUT 'http://127.0.0.1:9080/meteo/conditions/'",
+            "buffer-tokens":[
+            {
+                "name":"Meteo conditions",
+                "description":"Json Data that has info about the meteo conditions.",
+                "token-type":"json", 
+                "byte-size": 256, 
+                "regex-rule": "{[ \t\n]*\"air_temperature\"( )*:( )*(+|-)?[0-9]+,[ \t\n]*\"air_humidity\"( )*:( )*([0-9]|([1-9][0-9])|100),[ \t\n]*\"time_of_day\"( )*:( )*\"([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])\"[ \t\n]}",
+                "optional": false
+            }
+            ]
         }
     },
     "output-buffers":{

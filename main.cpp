@@ -4,7 +4,6 @@ using namespace std;
 using namespace Pistache;
 
 int main(int argc, char *argv[]) {
-
     // This code is needed for gracefull shutdown of the server when no longer needed.
     sigset_t signals;
     if (sigemptyset(&signals) != 0

@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS= -std=c++17 -Wall -Wextra
-CLIBS= -lpistache -lcrypto -lssl -lpthread
+CLIBS= -lpistache -ljsoncpp -lcrypto -lssl -lpthread
 NAME=harvestic # name of executable
 
 SRCS_CPP := $(wildcard ./*.cpp)
