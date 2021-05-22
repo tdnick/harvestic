@@ -22,9 +22,13 @@ public:
     void setTimeOfDay(timer t);
     void setTimeOfDay(std::string s);
     int hosesCount();
+    void setWaterTemp(int value); // get
+    int getWaterTemp(); // set
 private:
     std::vector<bool> stateOfHose;
     float airTemperature = 0.0;
     float airHumidity = 0.0;
     timer timeOfDay;
+    int waterTemp;
+    
 };

@@ -40,6 +40,21 @@
                 "optional": false
             }
             ]
+        },
+        "5":{
+            "token-delimitators": "",
+            "protocol": "HTTP",
+            "prefix": "curl -XPUT 'http://127.0.0.1:9080/waterTemp/'", // localhost:9080/waterTemp/:celsius
+            "buffer-tokens":[
+            {
+                "name":"Water temperature",
+                "description":"Sets water temperature.",
+                "token-type":"number", 
+                "byte-size":4, 
+                "regex-rule": "[0-9]{1,2}", // Correct inputs will be numbers between 15 and 30
+                "optional": false
+            }
+            ]
         }
     },
     "output-buffers":{
@@ -57,6 +72,11 @@
                 "optional": false
             }
             ]
+        },
+        "5":{
+            "token-delimitators": "",
+            "protocol": "HTTP",
+            "prefix": "curl -XGET 'http://127.0.0.1:9080/waterTemp'" // localhost:9080/waterTemp
         }
     }
 }
