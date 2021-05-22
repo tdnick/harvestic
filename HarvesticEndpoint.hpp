@@ -22,10 +22,12 @@ private:
     void doAuth(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
     void setSetting(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response); // Endpoint to configure one of the Harvestic's settings.
     void getSetting(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);// Setting to get the settings value of one of the configurations of the Harvestic
+    void getHoseState(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
+    void setHoseState(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
     using Lock = std::mutex; // Create the lock which prevents concurrent editing of the same variable
     using Guard = std::lock_guard<Lock>;
     Lock HarvesticLock;
-    Harvestic mwv; // Instance of the Harvestic model
+    Harvestic hvs; // Instance of the Harvestic model
     std::shared_ptr<Pistache::Http::Endpoint> httpEndpoint; // Defining the httpEndpoint and a router.
     Pistache::Rest::Router router;
 };

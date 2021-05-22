@@ -6,7 +6,7 @@
         "1":{
             "token-delimitators": "",
             "protocol": "HTTP",
-            "prefix": "curl -XPOST 'http://127.0.0.1:8080/'",
+            "prefix": "curl -XPOST 'http://127.0.0.1:9080/'",                                   // localhost:9080/settings/defrost/true
             "buffer-tokens":[
             {
                 "name":"Harvestic options",
@@ -33,13 +33,36 @@
                 "optional": false
             }
             ]
+        },
+        "2":{
+            "token-delimitators": "",
+            "protocol": "HTTP",
+            "prefix": "curl -XPUT 'http://127.0.0.1:9080/map/'", // localhost:9080/map/:index/:value
+            "buffer-tokens":[
+            {
+                "name":"Hose index number",
+                "description":"Index of the hose element in the on/off states vector.",
+                "token-type":"number", 
+                "byte-size":4, 
+                "regex-rule": "[0-9]+", // Correct inputs will be numbers between 0 and [length of hose vector]
+                "optional": false
+            },
+            {
+                "name":"Turned on/off state",
+                "description": "Sets the state of the hose.",
+                "token-type":"string",
+                "byte-size":5,
+                "regex-rule": "^(true|false)$",
+                "optional": false
+            }
+            ]
         }
     },
     "output-buffers":{
         "1":{
             "token-delimitators": "",
             "protocol": "HTTP",
-            "prefix": "curl -XGET 'http://127.0.0.1:8080/'",
+            "prefix": "curl -XGET 'http://127.0.0.1:9080/'",
             "buffer-tokens":[
             {
                 "name":"Harvestic options",
@@ -56,6 +79,21 @@
                 "byte-size":10,
                 "regex-rule": "[a-zA-Z]*", // Correct inputs will be: [defrost]
                 "optional": true
+            }
+            ]
+        },
+        "2":{
+            "token-delimitators": "",
+            "protocol": "HTTP",
+            "prefix": "curl -XGET 'http://127.0.0.1:9080/map/'",
+            "buffer-tokens":[
+            {
+                "name":"Hose index number",
+                "description":"",
+                "token-type":"number", 
+                "byte-size":4, 
+                "regex-rule": "[0-9]+", // Correct inputs will be numbers between 0 and [length of hose vector]
+                "optional": false
             }
             ]
         }

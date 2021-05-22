@@ -1,6 +1,6 @@
 #include "Harvestic.hpp"
 
-Harvestic::Harvestic(){ }
+Harvestic::Harvestic() : stateOfHose(20,false){ }
 
 int Harvestic::set(std::string name, std::string value){
     if(name == "defrost"){
@@ -24,4 +24,16 @@ std::string Harvestic::get(std::string name){
     else{
         return "";
     }
+}
+
+void Harvestic::setHoseState(int index, bool value){
+    stateOfHose[index] = value;
+}
+
+bool Harvestic::getHoseState(int index){
+    return stateOfHose[index];
+}
+
+int Harvestic::hosesCount(){
+    return stateOfHose.size();
 }

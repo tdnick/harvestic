@@ -46,7 +46,47 @@ void HarvesticEndpoint::setupRoutes() {
     Routes::Get(router, "/auth", Routes::bind(&HarvesticEndpoint::doAuth, this));
     Routes::Post(router, "/settings/:settingName/:value", Routes::bind(&HarvesticEndpoint::setSetting, this));
     Routes::Get(router, "/settings/:settingName/", Routes::bind(&HarvesticEndpoint::getSetting, this));
+    Routes::Get(router,"/map/:index/",Routes::bind(&HarvesticEndpoint::getHoseState,this));
+    Routes::Put(router,"/map/:index/:boolValue",Routes::bind(&HarvesticEndpoint::setHoseState,this));
 }
+
+void HarvesticEndpoint::getHoseState(const Rest::Request& request, Http::ResponseWriter response){
+    auto index = request.param(":index").as<int>();
+    
+    Guard guard(HarvesticLock);
+    if(index >= hvs.hosesCount()){
+        response.send(Http::Code::Not_Found, "Hose " + to_string(index) + " was not found");
+    }
+    else{
+        bool state = hvs.getHoseState(index);
+
+        using namespace Http;
+        response.headers()
+                        .add<Header::Server>("pistache/0.1")
+                        .add<Header::ContentType>(MIME(Text, Plain));
+        std::string turnedOnStatement = (state) ? "turned on" : "turned off";
+        response.send(Http::Code::Ok, "Hose " + to_string(index) + " is " + turnedOnStatement);
+    }
+}
+
+void HarvesticEndpoint::setHoseState(const Rest::Request& request, Http::ResponseWriter response){
+    std::cout<<"DEBUG";
+    auto index = request.param(":index").as<int>();
+    auto value = request.param(":boolValue").as<std::string>();
+    bool boolValue = value.compare("true") == 0;
+
+    std::cout<<value;
+    Guard guard(HarvesticLock);
+
+    if(index >= hvs.hosesCount()){
+        response.send(Http::Code::Not_Found, "Hose " + to_string(index) + " was not found");
+    }
+    else{ 
+        hvs.setHoseState(index,boolValue);
+        response.send(Http::Code::Ok, "Hose " + to_string(index) + " has been " + ((boolValue)?"turned on":"turned off"));
+    }
+}
+
 
 void HarvesticEndpoint::doAuth(const Rest::Request& request, Http::ResponseWriter response) {
     printCookies(request);
@@ -72,7 +112,7 @@ void HarvesticEndpoint::setSetting(const Rest::Request& request, Http::ResponseW
     }
 
     // Setting the Harvestic's setting to value
-    int setResponse = mwv.set(settingName, val);
+    int setResponse = hvs.set(settingName, val); 
 
     // Sending some confirmation or error response.
     if (setResponse == 1) {
@@ -90,7 +130,7 @@ void HarvesticEndpoint::getSetting(const Rest::Request& request, Http::ResponseW
 
     Guard guard(HarvesticLock);
 
-    string valueSetting = mwv.get(settingName);
+    string valueSetting = hvs.get(settingName);
 
     if (valueSetting != "") {
 
