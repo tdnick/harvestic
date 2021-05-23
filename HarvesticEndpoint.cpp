@@ -225,10 +225,10 @@ void HarvesticEndpoint::getSoilConditions(const Pistache::Rest::Request& request
 
     MineralsPercentage mp = hvs.getMineralsPercentage();
     minerals["Ca"] = mp.Ca;
+    minerals["K"] = mp.K;
     minerals["Mg"] = mp.Mg;
     minerals["N"] = mp.N;
     minerals["P"] = mp.P;
-    minerals["K"] = mp.K;
     minerals["S"] = mp.S;
 
     conditions["minerals"] = minerals;
@@ -236,7 +236,12 @@ void HarvesticEndpoint::getSoilConditions(const Pistache::Rest::Request& request
     conditions["pH"] = Json::Value(hvs.getPh()); 
 
     allEvents["conditions"] = conditions;
-    allEvents["recommendations"] = Json::Value(hvs.getSoilRecommendations());
+
+    for(auto r: hvs.getSoilRecommendations()){
+        recommendations.append(r);
+    }
+
+    allEvents["recommendations"] = recommendations;
 
     Json::StyledWriter styledWriter;
     response.send(Http::Code::Ok,styledWriter.write(allEvents));
@@ -252,10 +257,10 @@ void HarvesticEndpoint::setSoilConditions(const Pistache::Rest::Request& request
     Json::StyledWriter styledWriter;
 
     mp.Ca = Helper::formatFloat(minerals["Ca"].asFloat(),2);
+    mp.K = Helper::formatFloat(minerals["K"].asFloat(),2);
     mp.Mg = Helper::formatFloat(minerals["Mg"].asFloat(),2);
     mp.N = Helper::formatFloat(minerals["N"].asFloat(),2);
     mp.P = Helper::formatFloat(minerals["P"].asFloat(),2);
-    mp.K = Helper::formatFloat(minerals["K"].asFloat(),2);
     mp.S = Helper::formatFloat(minerals["S"].asFloat(),2);
 
     hvs.setMineralsPercentage(mp);

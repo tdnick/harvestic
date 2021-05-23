@@ -47,7 +47,7 @@ public:
     float getPh();
     void setPh(float p);
     std::string getMeteoRecommendations();
-    std::string getSoilRecommendations();
+    std::vector<std::string> getSoilRecommendations();
 private:
     std::vector<bool> stateOfHose;
     std::vector<err> hasError;
