@@ -28,6 +28,8 @@ public:
     explicit Harvestic();
     bool getHoseState(int index);
     void setHoseState(int index, bool value);
+    int getHosesCount();
+    void setHosesCount(int nr);
     std::vector<err> getErrors();
     void setError(int index, bool value);
     float getAirTemperature();
@@ -37,9 +39,8 @@ public:
     timer getTimeOfDay();
     void setTimeOfDay(timer t);
     void setTimeOfDay(std::string s);
-    int hosesCount();
-    void setWaterTemp(int value);
     int getWaterTemp();
+    void setWaterTemp(int value);
     MineralsPercentage getMineralsPercentage();
     void setMineralsPercentage(MineralsPercentage mp);
     float getSoilHumidity();
@@ -58,5 +59,4 @@ private:
     MineralsPercentage mineralsPercentage;
     float soilHumidity = 0;
     float pH = 0;
-    
 };

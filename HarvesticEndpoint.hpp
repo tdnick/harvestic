@@ -22,6 +22,8 @@ private:
     void setupRoutes();
     void getHoseState(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
     void setHoseState(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
+    void getHosesCount(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
+    void setHosesCount(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
     void getAllHoses(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
     void setAllHoses(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
     void getErrors(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
