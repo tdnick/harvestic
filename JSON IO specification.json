@@ -26,6 +26,29 @@
             }
             ]
         },
+        "2":{
+            "token-delimitators": "",
+            "protocol": "HTTP",
+            "prefix": "curl -XPUT 'http://127.0.0.1:9080/error/'", // localhost:9080/error/:errorCode/:boolValue
+            "buffer-tokens":[
+            {
+                "name":"Error code",
+                "description":"Type of error received from sensor.",
+                "token-type":"number", 
+                "byte-size":4, 
+                "regex-rule": "[0-7]", // Correct inputs will be numbers between 0 and 9
+                "optional": false
+            },
+            {
+                "name":"Error state",
+                "description": "Sets the state of the error.",
+                "token-type":"string",
+                "byte-size":5,
+                "regex-rule": "^(true|false)$",
+                "optional": false
+            }
+            ]
+        },
         "3":{
             "token-delimitators": "",
             "protocol": "HTTP",
@@ -72,6 +95,11 @@
                 "optional": false
             }
             ]
+        },
+        "2":{
+            "token-delimitators": "",
+            "protocol": "HTTP",
+            "prefix": "curl -XGET 'http://127.0.0.1:9080/error'" // localhost:9080/error
         },
         "5":{
             "token-delimitators": "",

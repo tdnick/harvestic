@@ -1,6 +1,22 @@
 #include "Harvestic.hpp"
 
-Harvestic::Harvestic() : stateOfHose(20, false), waterTemp(25){ }
+Harvestic::Harvestic() : stateOfHose(20, false), hasError(8), waterTemp(25){
+    std::vector<std::string> aux = {
+        "No issues.",
+        "Water pressure too low.",
+        "Water pressure too high.",
+        "Weather sensor malfunction.",
+        "Soil sensor malfunction.",
+        "Pump malfunction.",
+        "Power issues.",
+        "Other issues."
+    };
+
+    for(int i = 0; i <= 7; i++){
+        hasError[i].fail = false;
+        hasError[i].name = aux[i];
+    }
+}
 
 void Harvestic::setHoseState(int index, bool value){
     stateOfHose[index] = value;
@@ -8,6 +24,14 @@ void Harvestic::setHoseState(int index, bool value){
 
 bool Harvestic::getHoseState(int index){
     return stateOfHose[index];
+}
+
+void Harvestic::setError(int index, bool value){
+    hasError[index].fail = value;
+}
+
+std::vector<err> Harvestic::getErrors(){
+    return hasError;
 }
 
 float Harvestic::getAirTemperature(){

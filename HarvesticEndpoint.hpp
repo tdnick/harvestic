@@ -22,6 +22,8 @@ private:
     void setupRoutes();
     void getHoseState(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
     void setHoseState(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
+    void getErrors(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
+    void setError(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
     void getMeteoConditions(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
     void setMeteoConditions(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
     void getWaterTemp(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
