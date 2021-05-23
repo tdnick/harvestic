@@ -5,5 +5,7 @@
 !.vscode/extensions.json
 *.code-workspace
 
+harvestic
+
 # Local History for Visual Studio Code
 .history/
