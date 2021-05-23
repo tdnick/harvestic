@@ -32,6 +32,8 @@ void HarvesticEndpoint::setupRoutes() {
     Routes::Get(router, "/map/:index/", Routes::bind(&HarvesticEndpoint::getHoseState, this));
     Routes::Put(router, "/map/:index/:boolValue", Routes::bind(&HarvesticEndpoint::setHoseState, this));
     Routes::Get(router, "/map/", Routes::bind(&HarvesticEndpoint::getAllHoses, this));
+    Routes::Get(router, "/hosesCount", Routes::bind(&HarvesticEndpoint::getHosesCount, this));
+    Routes::Put(router, "/setHoses/:nr/", Routes::bind(&HarvesticEndpoint::setHosesCount, this));
     Routes::Put(router, "/map/:boolValue", Routes::bind(&HarvesticEndpoint::setAllHoses, this));
     Routes::Get(router, "/error", Routes::bind(&HarvesticEndpoint::getErrors, this));
     Routes::Put(router, "/error/:index/:boolValue", Routes::bind(&HarvesticEndpoint::setError, this));
@@ -41,16 +43,6 @@ void HarvesticEndpoint::setupRoutes() {
     Routes::Put(router, "/waterTemp/:celsius", Routes::bind(&HarvesticEndpoint::setWaterTemp, this));
     Routes::Put(router, "/soil/conditions/", Routes::bind(&HarvesticEndpoint::setSoilConditions, this));
     Routes::Get(router, "/soil/conditions/status", Routes::bind(&HarvesticEndpoint::getSoilConditions, this));
-}
-
-void HarvesticEndpoint::setMeteoConditions(const Rest::Request& request, Http::ResponseWriter response){
-    ParserJson json;
-    Json::Value root = json.parse(request.body());
-
-    hvs.setAirTemperature(root["air_temperature"].asFloat());
-    hvs.setAirHumidity(root["air_humidity"].asFloat());
-    hvs.setTimeOfDay(root["time_of_day"].asString());
-    response.send(Http::Code::Ok, "Meteo conditions set.");
 }
 
 void HarvesticEndpoint::getMeteoConditions(const Rest::Request& request, Http::ResponseWriter response){
@@ -73,11 +65,21 @@ void HarvesticEndpoint::getMeteoConditions(const Rest::Request& request, Http::R
     response.send(Http::Code::Ok,styledWriter.write(allEvents));
 }
 
+void HarvesticEndpoint::setMeteoConditions(const Rest::Request& request, Http::ResponseWriter response){
+    ParserJson json;
+    Json::Value root = json.parse(request.body());
+
+    hvs.setAirTemperature(root["air_temperature"].asFloat());
+    hvs.setAirHumidity(root["air_humidity"].asFloat());
+    hvs.setTimeOfDay(root["time_of_day"].asString());
+    response.send(Http::Code::Ok, "Meteo conditions set.");
+}
+
 void HarvesticEndpoint::getHoseState(const Rest::Request& request, Http::ResponseWriter response){
     auto index = request.param(":index").as<int>();
-    
+
     Guard guard(HarvesticLock);
-    if(index >= hvs.hosesCount()){
+    if(index >= hvs.getHosesCount()){
         response.send(Http::Code::Not_Found, "Hose " + to_string(index) + " was not found");
     }
     else{
@@ -99,13 +101,33 @@ void HarvesticEndpoint::setHoseState(const Rest::Request& request, Http::Respons
 
     Guard guard(HarvesticLock);
 
-    if(index >= hvs.hosesCount()){
+    if(index >= hvs.getHosesCount()){
         response.send(Http::Code::Not_Found, "Hose " + to_string(index) + " was not found");
     }
     else{ 
         hvs.setHoseState(index,boolValue);
         response.send(Http::Code::Ok, "Hose " + to_string(index) + " has been " + ((boolValue)?"turned on":"turned off"));
     }
+}
+
+void HarvesticEndpoint::getHosesCount(const Rest::Request& request, Http::ResponseWriter response){
+    Guard guard(HarvesticLock);
+    int nr = hvs.getHosesCount();
+
+    using namespace Http;
+    response.headers()
+                    .add<Header::Server>("pistache/0.1")
+                    .add<Header::ContentType>(MIME(Text, Plain));
+    response.send(Http::Code::Ok, std::to_string(nr) + " hoses installed.");
+}
+
+void HarvesticEndpoint::setHosesCount(const Rest::Request& request, Http::ResponseWriter response){
+    auto nr = request.param(":nr").as<int>();
+
+    Guard guard(HarvesticLock);
+
+    hvs.setHosesCount(nr);
+    response.send(Http::Code::Ok, "Number of hoses set.");
 }
 
 void HarvesticEndpoint::getAllHoses(const Rest::Request& request, Http::ResponseWriter response){
@@ -118,7 +140,7 @@ void HarvesticEndpoint::getAllHoses(const Rest::Request& request, Http::Response
     
     std::string allHoses = "";
 
-    for(int i = 0; i < hvs.hosesCount(); i++){
+    for(int i = 0; i < hvs.getHosesCount(); i++){
         std::string aux = ((hvs.getHoseState(i))?"turned on":"turned off");
         allHoses += "Hose " + std::to_string(i) + " is " + aux + "\n";
     }
@@ -131,7 +153,7 @@ void HarvesticEndpoint::setAllHoses(const Rest::Request& request, Http::Response
 
     Guard guard(HarvesticLock);
 
-    for(int i = 0; i < hvs.hosesCount(); i++){
+    for(int i = 0; i < hvs.getHosesCount(); i++){
         hvs.setHoseState(i, boolValue);
     }
     

@@ -18,20 +18,28 @@ Harvestic::Harvestic() : stateOfHose(20, false), hasError(8), waterTemp(25){
     }
 }
 
-void Harvestic::setHoseState(int index, bool value){
-    stateOfHose[index] = value;
-}
-
 bool Harvestic::getHoseState(int index){
     return stateOfHose[index];
 }
 
-void Harvestic::setError(int index, bool value){
-    hasError[index].fail = value;
+void Harvestic::setHoseState(int index, bool value){
+    stateOfHose[index] = value;
+}
+
+int Harvestic::getHosesCount(){
+    return stateOfHose.size();
+}
+
+void Harvestic::setHosesCount(int nr){
+    stateOfHose.resize(nr, false);
 }
 
 std::vector<err> Harvestic::getErrors(){
     return hasError;
+}
+
+void Harvestic::setError(int index, bool value){
+    hasError[index].fail = value;
 }
 
 float Harvestic::getAirTemperature(){
@@ -71,16 +79,12 @@ void Harvestic::setTimeOfDay(std::string s){
     timeOfDay.seconds = std::stoi(tokenized[2]);
 }
 
-int Harvestic::hosesCount(){
-    return stateOfHose.size();
+int Harvestic::getWaterTemp(){
+    return waterTemp;
 }
 
 void Harvestic::setWaterTemp(int value){
     waterTemp = value;
-}
-
-int Harvestic::getWaterTemp(){
-    return waterTemp;
 }
 
 MineralsPercentage Harvestic::getMineralsPercentage(){
