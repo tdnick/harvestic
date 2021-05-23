@@ -7,6 +7,7 @@
             "token-delimitators": "",
             "protocol": "HTTP",
             "prefix": "curl -XPUT 'http://127.0.0.1:9080/map/'", // localhost:9080/map/:index/:boolValue
+                                                                 // :index parameter is optional
             "buffer-tokens":[
             {
                 "name":"Hose index number",
@@ -14,7 +15,7 @@
                 "token-type":"number", 
                 "byte-size":4, 
                 "regex-rule": "[0-9]+", // Correct inputs will be numbers between 0 and [length of hose vector]
-                "optional": false
+                "optional": true
             },
             {
                 "name":"Turned on/off state",
@@ -99,7 +100,8 @@
         "1":{
             "token-delimitators": "",
             "protocol": "HTTP",
-            "prefix": "curl -XGET 'http://127.0.0.1:9080/map/'",
+            "prefix": "curl -XGET 'http://127.0.0.1:9080/map/'", // localhost:9080/map/:index
+                                                                 // :index parameter is optional
             "buffer-tokens":[
             {
                 "name":"Hose index number",
@@ -107,7 +109,7 @@
                 "token-type":"number", 
                 "byte-size":4, 
                 "regex-rule": "[0-9]+", // Correct inputs will be numbers between 0 and [length of hose vector]
-                "optional": false
+                "optional": true
             }
             ]
         },
