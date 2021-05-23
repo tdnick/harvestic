@@ -65,51 +65,6 @@ void HarvesticEndpoint::getMeteoConditions(const Rest::Request& request, Http::R
     response.send(Http::Code::Ok,styledWriter.write(allEvents));
 }
 
-void HarvesticEndpoint::setMeteoConditions(const Rest::Request& request, Http::ResponseWriter response){
-    ParserJson json;
-    Json::Value root = json.parse(request.body());
-
-    hvs.setAirTemperature(root["air_temperature"].asFloat());
-    hvs.setAirHumidity(root["air_humidity"].asFloat());
-    hvs.setTimeOfDay(root["time_of_day"].asString());
-    response.send(Http::Code::Ok, "Meteo conditions set.");
-}
-
-void HarvesticEndpoint::getHoseState(const Rest::Request& request, Http::ResponseWriter response){
-    auto index = request.param(":index").as<int>();
-    
-    Guard guard(HarvesticLock);
-    if(index >= hvs.getHosesCount()){
-        response.send(Http::Code::Not_Found, "Hose " + to_string(index) + " was not found");
-    }
-    else{
-        bool state = hvs.getHoseState(index);
-
-        using namespace Http;
-        response.headers()
-                        .add<Header::Server>("pistache/0.1")
-                        .add<Header::ContentType>(MIME(Text, Plain));
-        std::string turnedOnStatement = (state) ? "turned on" : "turned off";
-        response.send(Http::Code::Ok, "Hose " + to_string(index) + " is " + turnedOnStatement);
-    }
-}
-
-void HarvesticEndpoint::setHoseState(const Rest::Request& request, Http::ResponseWriter response){
-    auto index = request.param(":index").as<int>();
-    auto value = request.param(":boolValue").as<std::string>();
-    bool boolValue = value.compare("true") == 0;
-
-    Guard guard(HarvesticLock);
-
-    if(index >= hvs.getHosesCount()){
-        response.send(Http::Code::Not_Found, "Hose " + to_string(index) + " was not found");
-    }
-    else{ 
-        hvs.setHoseState(index,boolValue);
-        response.send(Http::Code::Ok, "Hose " + to_string(index) + " has been " + ((boolValue)?"turned on":"turned off"));
-    }
-}
-
 void HarvesticEndpoint::getHosesCount(const Rest::Request& request, Http::ResponseWriter response){
     Guard guard(HarvesticLock);
     int nr = hvs.getHosesCount();
