@@ -31,6 +31,8 @@ void HarvesticEndpoint::setupRoutes() {
     using namespace Rest;
     Routes::Get(router, "/map/:index/", Routes::bind(&HarvesticEndpoint::getHoseState, this));
     Routes::Put(router, "/map/:index/:boolValue", Routes::bind(&HarvesticEndpoint::setHoseState, this));
+    Routes::Get(router, "/error", Routes::bind(&HarvesticEndpoint::getErrors, this));
+    Routes::Put(router, "/error/:index/:boolValue", Routes::bind(&HarvesticEndpoint::setError, this));
     Routes::Put(router, "/meteo/conditions/", Routes::bind(&HarvesticEndpoint::setMeteoConditions, this));
     Routes::Get(router, "/meteo/conditions/status", Routes::bind(&HarvesticEndpoint::getMeteoConditions, this));
     Routes::Get(router, "/waterTemp/", Routes::bind(&HarvesticEndpoint::getWaterTemp, this));
@@ -102,6 +104,52 @@ void HarvesticEndpoint::setHoseState(const Rest::Request& request, Http::Respons
     else{ 
         hvs.setHoseState(index,boolValue);
         response.send(Http::Code::Ok, "Hose " + to_string(index) + " has been " + ((boolValue)?"turned on":"turned off"));
+    }
+}
+
+void HarvesticEndpoint::getErrors(const Rest::Request& request, Http::ResponseWriter response){
+    
+    Guard guard(HarvesticLock);
+    std::vector<err> states = hvs.getErrors();
+
+    using namespace Http;
+    response.headers()
+                    .add<Header::Server>("pistache/0.1")
+                    .add<Header::ContentType>(MIME(Text, Plain));
+    
+    std::string allErrors = "";
+
+    for(int i = 1; i <= 7; i++){
+        if(states[i].fail){
+            allErrors += states[i].name + "\n";
+        }
+    }
+    if(allErrors.length() == 0){
+        allErrors = "No problems detected.";
+    }
+
+    response.send(Http::Code::Ok, allErrors);
+}
+
+void HarvesticEndpoint::setError(const Rest::Request& request, Http::ResponseWriter response){
+    auto index = request.param(":index").as<int>();
+    auto value = request.param(":boolValue").as<std::string>();
+    bool boolValue = value.compare("true") == 0;
+
+    Guard guard(HarvesticLock);
+
+    if(index > 7){
+        response.send(Http::Code::Not_Found, "Error code " + to_string(index) + " was not found");
+    }
+    else if(index == 0){
+        for(int i = 0; i <= 7; i++){
+            hvs.setError(i, false);
+        }
+        response.send(Http::Code::Ok, "All errors have been fixed.");
+    }
+    else { 
+        hvs.setError(index, boolValue);
+        response.send(Http::Code::Ok, "Error " + to_string(index) + " has been " + ((boolValue)?"found":"fixed"));
     }
 }
 
