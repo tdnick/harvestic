@@ -31,6 +31,8 @@ void HarvesticEndpoint::setupRoutes() {
     using namespace Rest;
     Routes::Get(router, "/map/:index/", Routes::bind(&HarvesticEndpoint::getHoseState, this));
     Routes::Put(router, "/map/:index/:boolValue", Routes::bind(&HarvesticEndpoint::setHoseState, this));
+    Routes::Get(router, "/map/", Routes::bind(&HarvesticEndpoint::getAllHoses, this));
+    Routes::Put(router, "/map/:boolValue", Routes::bind(&HarvesticEndpoint::setAllHoses, this));
     Routes::Get(router, "/error", Routes::bind(&HarvesticEndpoint::getErrors, this));
     Routes::Put(router, "/error/:index/:boolValue", Routes::bind(&HarvesticEndpoint::setError, this));
     Routes::Put(router, "/meteo/conditions/", Routes::bind(&HarvesticEndpoint::setMeteoConditions, this));
@@ -50,6 +52,7 @@ void HarvesticEndpoint::setMeteoConditions(const Rest::Request& request, Http::R
 }
 
 void HarvesticEndpoint::getMeteoConditions(const Rest::Request& request, Http::ResponseWriter response){
+    (void)request;
     Json::Value allEvents;
     Json::Value conditions;
     Json::Value recommendations;
@@ -105,6 +108,37 @@ void HarvesticEndpoint::setHoseState(const Rest::Request& request, Http::Respons
         hvs.setHoseState(index,boolValue);
         response.send(Http::Code::Ok, "Hose " + to_string(index) + " has been " + ((boolValue)?"turned on":"turned off"));
     }
+}
+
+void HarvesticEndpoint::getAllHoses(const Rest::Request& request, Http::ResponseWriter response){
+    Guard guard(HarvesticLock);
+
+    using namespace Http;
+    response.headers()
+                    .add<Header::Server>("pistache/0.1")
+                    .add<Header::ContentType>(MIME(Text, Plain));
+    
+    std::string allHoses = "";
+
+    for(int i = 0; i < hvs.hosesCount(); i++){
+        std::string aux = ((hvs.getHoseState(i))?"turned on":"turned off");
+        allHoses += "Hose " + std::to_string(i) + " is " + aux + "\n";
+    }
+    response.send(Http::Code::Ok, allHoses);
+}
+
+void HarvesticEndpoint::setAllHoses(const Rest::Request& request, Http::ResponseWriter response){
+    auto value = request.param(":boolValue").as<std::string>();
+    bool boolValue = value.compare("true") == 0;
+
+    Guard guard(HarvesticLock);
+
+    for(int i = 0; i < hvs.hosesCount(); i++){
+        hvs.setHoseState(i, boolValue);
+    }
+    
+    std::string aux = ((boolValue)?"turned on":"turned off");
+    response.send(Http::Code::Ok, "All hoses have been " + aux);
 }
 
 void HarvesticEndpoint::getErrors(const Rest::Request& request, Http::ResponseWriter response){
