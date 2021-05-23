@@ -37,6 +37,8 @@ void HarvesticEndpoint::setupRoutes() {
     Routes::Get(router, "/meteo/conditions/status", Routes::bind(&HarvesticEndpoint::getMeteoConditions, this));
     Routes::Get(router, "/waterTemp/", Routes::bind(&HarvesticEndpoint::getWaterTemp, this));
     Routes::Put(router, "/waterTemp/:celsius", Routes::bind(&HarvesticEndpoint::setWaterTemp, this));
+    Routes::Put(router, "/soil/conditions/", Routes::bind(&HarvesticEndpoint::setSoilConditions, this));
+    Routes::Get(router, "/soil/conditions/status", Routes::bind(&HarvesticEndpoint::getSoilConditions, this));
 }
 
 void HarvesticEndpoint::setMeteoConditions(const Rest::Request& request, Http::ResponseWriter response){
@@ -55,10 +57,6 @@ void HarvesticEndpoint::getMeteoConditions(const Rest::Request& request, Http::R
     Json::Value recommendations;
 
     timer timeOfDay = hvs.getTimeOfDay();
-    /* std::string timeString = to_string(timeOfDay.hours) + ":"
-                    + to_string(timeOfDay.minutes) + ":"
-                    + to_string(timeOfDay.seconds); */
-                    
     std::string timeString = Helper::formatTime(timeOfDay.hours,timeOfDay.minutes,timeOfDay.seconds);
 
     conditions["air_temperature"] = Json::Value(hvs.getAirTemperature());
@@ -183,4 +181,54 @@ void HarvesticEndpoint::setWaterTemp(const Rest::Request& request, Http::Respons
         hvs.setWaterTemp(celsius);
         response.send(Http::Code::Ok, "Temperature was set to " + to_string(celsius));
     }
+}
+
+void HarvesticEndpoint::getSoilConditions(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response){
+    Json::Value allEvents;
+    Json::Value conditions;
+    Json::Value recommendations;
+    Json::Value minerals;
+
+    MineralsPercentage mp = hvs.getMineralsPercentage();
+    minerals["Ca"] = mp.Ca;
+    minerals["Mg"] = mp.Mg;
+    minerals["N"] = mp.N;
+    minerals["P"] = mp.P;
+    minerals["K"] = mp.K;
+    minerals["S"] = mp.S;
+
+    conditions["minerals"] = minerals;
+    conditions["soil_humidity"] = Json::Value(hvs.getSoilHumidity()); 
+    conditions["pH"] = Json::Value(hvs.getPh()); 
+
+    allEvents["conditions"] = conditions;
+    allEvents["recommendations"] = Json::Value(hvs.getSoilRecommendations());
+
+    Json::StyledWriter styledWriter;
+    response.send(Http::Code::Ok,styledWriter.write(allEvents));
+}
+
+void HarvesticEndpoint::setSoilConditions(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response){
+    ParserJson json;
+    Json::Value root = json.parse(request.body());
+
+    MineralsPercentage mp;
+    Json::Value minerals = root["minerals"];
+
+    Json::StyledWriter styledWriter;
+
+    mp.Ca = Helper::formatFloat(minerals["Ca"].asFloat(),2);
+    mp.Mg = Helper::formatFloat(minerals["Mg"].asFloat(),2);
+    mp.N = Helper::formatFloat(minerals["N"].asFloat(),2);
+    mp.P = Helper::formatFloat(minerals["P"].asFloat(),2);
+    mp.K = Helper::formatFloat(minerals["K"].asFloat(),2);
+    mp.S = Helper::formatFloat(minerals["S"].asFloat(),2);
+
+    hvs.setMineralsPercentage(mp);
+    auto soilHumidity = Helper::formatFloat(root["soil_humidity"].asFloat(),2);
+    auto pH = Helper::formatFloat(root["pH"].asFloat(),2);
+    hvs.setSoilHumidity(soilHumidity);
+    hvs.setPh(pH);
+    
+    response.send(Http::Code::Ok, "Soil conditions set.");
 }

@@ -83,6 +83,35 @@ int Harvestic::getWaterTemp(){
     return waterTemp;
 }
 
+MineralsPercentage Harvestic::getMineralsPercentage(){
+    return mineralsPercentage;
+}
+
+void Harvestic::setMineralsPercentage(MineralsPercentage mp){
+    mineralsPercentage.Ca = mp.Ca;
+    mineralsPercentage.K = mp.K;
+    mineralsPercentage.Mg = mp.Mg;
+    mineralsPercentage.N = mp.P;
+    mineralsPercentage.P = mp.P;
+    mineralsPercentage.S = mp.S;
+}
+
+float Harvestic::getSoilHumidity(){
+    return soilHumidity;
+}
+
+void Harvestic::setSoilHumidity(float s){
+    soilHumidity = s;
+}
+
+float Harvestic::getPh(){
+    return pH;
+}
+
+void Harvestic::setPh(float p){
+    pH = p;
+}
+
 std::string Harvestic::getMeteoRecommendations(){
     std::string s = "";
 
@@ -95,5 +124,10 @@ std::string Harvestic::getMeteoRecommendations(){
     else{
         s = "Everything is ok! :)";
     }
+    return s;
+}
+
+std::string Harvestic::getSoilRecommendations(){
+    std::string s="";
     return s;
 }

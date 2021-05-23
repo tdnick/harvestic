@@ -64,6 +64,21 @@
             }
             ]
         },
+        "4":{
+            "token-delimitators": "",
+            "protocol": "HTTP",
+            "prefix": "curl -XPUT 'http://127.0.0.1:9080/soil/conditions'",
+            "buffer-tokens":[
+            {
+                "name":"Soil conditions",
+                "description":"Json Data that has info about the soil conditions.",
+                "token-type":"json", 
+                "byte-size": 256, 
+                "regex-rule": "{[ \t\n]*\"minerals\"[ \t\n]*:[ \t\n]*{[ \t\n]*((\"[a-zA-z]+\"[ \t\n]*:[ \t\n]*[0-9]+(.[0-9]+)?(,)?)+[ \t\n]*)+},[ \t\n]*\"soil_humidity\"[ \t\n]*:[ \t\n]*(100|[1-9]+[0-9]*|[0-9]),[ \t\n]*\"pH\"[ \t\n]*:[ \t\n]*(([0-9]|1[0-3])(.[0-9]+)?|14(.(0)+)?)[ \t\n]*}",
+                "optional": false
+            }
+            ]
+        },
         "5":{
             "token-delimitators": "",
             "protocol": "HTTP",

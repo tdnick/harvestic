@@ -28,6 +28,9 @@ private:
     void setMeteoConditions(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
     void getWaterTemp(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
     void setWaterTemp(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
+    void getSoilConditions(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
+    void setSoilConditions(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
+
     using Lock = std::mutex; // Create the lock which prevents concurrent editing of the same variable
     using Guard = std::lock_guard<Lock>;
     Lock HarvesticLock;
