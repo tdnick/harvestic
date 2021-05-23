@@ -73,6 +73,11 @@
             }
             ]
         },
+        "3":{
+            "token-delimitators": "",
+            "protocol": "HTTP",
+            "prefix": "curl -XGET 'http://127.0.0.1:9080/meteo/conditions/status'"
+        },
         "5":{
             "token-delimitators": "",
             "protocol": "HTTP",

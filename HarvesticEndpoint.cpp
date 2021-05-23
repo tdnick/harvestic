@@ -1,5 +1,7 @@
 #include "HarvesticEndpoint.hpp"
 #include "ParserJson.hpp"
+#include "Helper.cpp"
+
 using namespace std;
 using namespace Pistache;
 
@@ -30,6 +32,7 @@ void HarvesticEndpoint::setupRoutes() {
     Routes::Get(router, "/map/:index/", Routes::bind(&HarvesticEndpoint::getHoseState, this));
     Routes::Put(router, "/map/:index/:boolValue", Routes::bind(&HarvesticEndpoint::setHoseState, this));
     Routes::Put(router, "/meteo/conditions/", Routes::bind(&HarvesticEndpoint::setMeteoConditions, this));
+    Routes::Get(router, "/meteo/conditions/status", Routes::bind(&HarvesticEndpoint::getMeteoConditions, this));
     Routes::Get(router, "/waterTemp/", Routes::bind(&HarvesticEndpoint::getWaterTemp, this));
     Routes::Put(router, "/waterTemp/:celsius", Routes::bind(&HarvesticEndpoint::setWaterTemp, this));
 }
@@ -44,9 +47,27 @@ void HarvesticEndpoint::setMeteoConditions(const Rest::Request& request, Http::R
     response.send(Http::Code::Ok, "Meteo conditions set.");
 }
 
-///TODO:
 void HarvesticEndpoint::getMeteoConditions(const Rest::Request& request, Http::ResponseWriter response){
-    
+    Json::Value allEvents;
+    Json::Value conditions;
+    Json::Value recommendations;
+
+    timer timeOfDay = hvs.getTimeOfDay();
+    /* std::string timeString = to_string(timeOfDay.hours) + ":"
+                    + to_string(timeOfDay.minutes) + ":"
+                    + to_string(timeOfDay.seconds); */
+                    
+    std::string timeString = Helper::formatTime(timeOfDay.hours,timeOfDay.minutes,timeOfDay.seconds);
+
+    conditions["air_temperature"] = Json::Value(hvs.getAirTemperature());
+    conditions["air_humidity"] = Json::Value(hvs.getAirHumidity());
+    conditions["time_of_day"] = Json::Value(timeString);
+
+    allEvents["conditions"] = conditions;
+    allEvents["recommendations"] = Json::Value(hvs.getMeteoRecommendations());
+
+    Json::StyledWriter styledWriter;
+    response.send(Http::Code::Ok,styledWriter.write(allEvents));
 }
 
 void HarvesticEndpoint::getHoseState(const Rest::Request& request, Http::ResponseWriter response){

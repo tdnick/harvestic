@@ -58,3 +58,18 @@ void Harvestic::setWaterTemp(int value){
 int Harvestic::getWaterTemp(){
     return waterTemp;
 }
+
+std::string Harvestic::getMeteoRecommendations(){
+    std::string s = "";
+
+    if((6 <= timeOfDay.hours && timeOfDay.hours <= 10)
+     || (18 <= timeOfDay.hours && timeOfDay.hours <= 21)
+     || (airHumidity < 60)
+     || (airTemperature < 28)){
+        s = "Plants should be watered!";
+     }
+    else{
+        s = "Everything is ok! :)";
+    }
+    return s;
+}

@@ -24,6 +24,7 @@ public:
     int hosesCount();
     void setWaterTemp(int value); // get
     int getWaterTemp(); // set
+    std::string getMeteoRecommendations();
 private:
     std::vector<bool> stateOfHose;
     float airTemperature = 0.0;
