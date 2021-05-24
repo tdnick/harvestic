@@ -160,46 +160,50 @@ std::vector<std::string> Harvestic::getSoilRecommendations(){
     }
 
     if (mineralsPercentage.Ca < 2){
-        s.push_back("The Ca concentration is too low! Concentration difference: " + std::to_string(2 - mineralsPercentage.Ca));
+        s.push_back("The Ca concentration is low! Add " + std::to_string(getQuantity(2, mineralsPercentage.Ca)) + "g.");
     }
     else if (mineralsPercentage.Ca > 3) {
-        s.push_back("The Ca concentration is too high!");
+        s.push_back("The Ca concentration is high!");
     }
 
     if (mineralsPercentage.Mg < 0.6){
-        s.push_back("The Mg concentration is too low! Concentration difference: " + std::to_string(0.6 - mineralsPercentage.Mg));
+        s.push_back("The Mg concentration is low! Add " + std::to_string(getQuantity(0.6, mineralsPercentage.Mg)) + "g.");
     }
     else if (mineralsPercentage.Mg > 1.5) {
-        s.push_back("The Mg concentration is too high!");
+        s.push_back("The Mg concentration is high!");
     }
 
     if (mineralsPercentage.N < 3.5){
-        s.push_back("The N concentration is too low! Concentration difference: " + std::to_string(3.5 - mineralsPercentage.N));
+        s.push_back("The N concentration is low! Add " + std::to_string(getQuantity(3.5, mineralsPercentage.N)) + "g.");
     }
     else if (mineralsPercentage.N > 5.5) {
-        s.push_back("The N concentration is too high!");
+        s.push_back("The N concentration is high!");
     }
 
     if (mineralsPercentage.P < 0.3){
-        s.push_back("The P concentration is too low! Concentration difference: " + std::to_string(0.3 - mineralsPercentage.P));
+        s.push_back("The P concentration is low! Add " + std::to_string(getQuantity(0.3, mineralsPercentage.P)) + "g.");
     }
     else if (mineralsPercentage.P > 0.7) {
-        s.push_back("The P concentration is too high!");
+        s.push_back("The P concentration is high!");
     }
 
     if (mineralsPercentage.K < 3){
-        s.push_back("The K concentration is too low! Concentration difference: " + std::to_string(3 - mineralsPercentage.K));
+        s.push_back("The K concentration is low! Add " + std::to_string(getQuantity(3, mineralsPercentage.K)) + "g.");
     }
     else if (mineralsPercentage.K > 4) {
-        s.push_back("The K concentration is too high!");
+        s.push_back("The K concentration is high!");
     }
 
     if (mineralsPercentage.S < 0.3){
-        s.push_back("The S concentration is too low! Concentration difference: " + std::to_string(0.3 - mineralsPercentage.S));
+        s.push_back("The S concentration is low! Add " + std::to_string(getQuantity(0.3, mineralsPercentage.S)) + "g.");
     }
     else if (mineralsPercentage.S > 1) {
-        s.push_back("The S concentration is too high!");
+        s.push_back("The S concentration is high!");
     }
 
     return s;
+}
+
+int Harvestic::getQuantity(float minimum, float concentration){
+        return (int) ceil(((minimum - concentration) / minimum) * 40 * stateOfHose.size());
 }

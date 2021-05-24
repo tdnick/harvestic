@@ -18,11 +18,12 @@ public:
         if(numberOfDecimals < 1)
             return f;
 
-        int t = pow(10,numberOfDecimals);
-        int floatAsInt = (int)(f * t + .5);
+        auto t = pow(10,numberOfDecimals);
+        float floatAsInt = (int)(f * t + .5);
 
         float result = (float)floatAsInt / t;
-
+        
         return result;
     }
+
 };

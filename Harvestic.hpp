@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <math.h>
 
 struct timer {
     int hours = 0;
@@ -49,6 +50,7 @@ public:
     void setPh(float p);
     std::string getMeteoRecommendations();
     std::vector<std::string> getSoilRecommendations();
+    int getQuantity(float minimum, float concentration);
 private:
     std::vector<bool> stateOfHose;
     std::vector<err> hasError;
