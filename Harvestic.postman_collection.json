@@ -1,0 +1,363 @@
+{
+	"info": {
+		"_postman_id": "cbeae084-219b-4be0-8fe9-b5e9bbfa1445",
+		"name": "Harvestic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetHoseState",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/map/:index",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"map",
+						":index"
+					],
+					"variable": [
+						{
+							"key": "index",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SetHoseState",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/map/:index/:boolValue",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"map",
+						":index",
+						":boolValue"
+					],
+					"variable": [
+						{
+							"key": "index",
+							"value": "3"
+						},
+						{
+							"key": "boolValue",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllHoses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/map",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"map"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SetAllHoses",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/map/:boolValue",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"map",
+						":boolValue"
+					],
+					"variable": [
+						{
+							"key": "boolValue",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetHosesCount",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/hosesCount",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"hosesCount"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SetHosesCount",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/setHoses/:nr",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"setHoses",
+						":nr"
+					],
+					"variable": [
+						{
+							"key": "nr",
+							"value": "40"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetErrors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/error",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"error"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SetError",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/error/:index/:boolValue",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"error",
+						":index",
+						":boolValue"
+					],
+					"variable": [
+						{
+							"key": "index",
+							"value": "5"
+						},
+						{
+							"key": "boolValue",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetWaterTemp",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/waterTemp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"waterTemp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SetWaterTemp",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/waterTemp/:celsius",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"waterTemp",
+						":celsius"
+					],
+					"variable": [
+						{
+							"key": "celsius",
+							"value": "20"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetMeteoStatus",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/meteo/conditions/status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"meteo",
+						"conditions",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SetMeteoConditions",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"air_temperature\" : 18,\r\n    \"air_humidity\" : 40,\r\n    \"time_of_day\" : \"09:03:05\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/meteo/conditions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"meteo",
+						"conditions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetSoilStatus",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9080/soil/conditions/status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"soil",
+						"conditions",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SetSoilConditions",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"minerals\" : {\r\n        \"Ca\" : 2.79,\r\n        \"K\" : 2.86,\r\n        \"Mg\" : 1.6,\r\n        \"N\" : 1.84,\r\n        \"P\" : 0.44,\r\n        \"S\" : 1.85\r\n    },\r\n    \"soil_humidity\" : 40,\r\n    \"pH\" : 6\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9080/soil/conditions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"soil",
+						"conditions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
